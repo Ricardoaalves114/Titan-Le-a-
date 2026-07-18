@@ -29,7 +29,7 @@ async function saveData(data) {
 }
 
 // ---------- plate ring avatar ----------
-const PLATE_COLORS = ["#C98A3E", "#5B8A72", "#5B6B73", "#B25146", "#8A6FA8"];
+const PLATE_COLORS = ["#4C7FBF", "#5C6675", "#3E5C8A", "#6B7A99", "#34456B"];
 function colorForId(id) {
   let sum = 0;
   for (const c of String(id)) sum += c.charCodeAt(0);
@@ -59,11 +59,11 @@ function PlateRing({ name, id, size = 44 }) {
           width: "100%",
           height: "100%",
           borderRadius: "50%",
-          background: "#211E1A",
+          background: "#171C26",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          color: "#EDE9E2",
+          color: "#E6E9EF",
           fontFamily: "'IBM Plex Mono', monospace",
           fontSize: size * 0.32,
           fontWeight: 600,
@@ -148,7 +148,7 @@ export default function App() {
   if (loading) {
     return (
       <div style={styles.loadingScreen}>
-        <div style={{ fontFamily: "'IBM Plex Mono', monospace", color: "#8A8478", fontSize: 13 }}>
+        <div style={{ fontFamily: "'IBM Plex Mono', monospace", color: "#7C8797", fontSize: 13 }}>
           A carregar…
         </div>
       </div>
@@ -156,9 +156,9 @@ export default function App() {
   }
 
   return (
-    <div style={styles.app}>
+    <div style={styles.app} className="tl-app">
       <style>{fontImports}</style>
-      <aside style={styles.sidebar}>
+      <aside style={styles.sidebar} className="tl-sidebar">
         <div style={styles.brand}>
           <div style={styles.brandMark}>TL</div>
           <div>
@@ -168,7 +168,7 @@ export default function App() {
         </div>
 
         <div style={styles.searchRow}>
-          <Search size={14} color="#8A8478" />
+          <Search size={14} color="#7C8797" />
           <input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
@@ -196,8 +196,8 @@ export default function App() {
               }}
               style={{
                 ...styles.studentRow,
-                background: s.id === selectedId ? "#2A2621" : "transparent",
-                borderLeft: s.id === selectedId ? "2px solid #C98A3E" : "2px solid transparent",
+                background: s.id === selectedId ? "#232A38" : "transparent",
+                borderLeft: s.id === selectedId ? "2px solid #4C7FBF" : "2px solid transparent",
               }}
             >
               <PlateRing name={s.name || "?"} id={s.id} size={36} />
@@ -205,17 +205,17 @@ export default function App() {
                 <div style={styles.studentName}>{s.name || "(sem nome)"}</div>
                 <div style={styles.studentMeta}>{s.goal || "sem objetivo definido"}</div>
               </div>
-              <ChevronRight size={14} color="#5B5650" style={{ marginLeft: "auto", flexShrink: 0 }} />
+              <ChevronRight size={14} color="#5C6675" style={{ marginLeft: "auto", flexShrink: 0 }} />
             </div>
           ))}
         </div>
       </aside>
 
-      <main style={styles.main}>
+      <main style={styles.main} className="tl-main">
         {!selected && (
           <div style={styles.noSelection}>
-            <Dumbbell size={28} color="#3A362F" />
-            <div style={{ color: "#8A8478", fontFamily: "'IBM Plex Mono', monospace", fontSize: 13, marginTop: 10 }}>
+            <Dumbbell size={28} color="#2E3644" />
+            <div style={{ color: "#7C8797", fontFamily: "'IBM Plex Mono', monospace", fontSize: 13, marginTop: 10 }}>
               Seleciona um aluno, ou cria um novo, para veres os dados.
             </div>
           </div>
@@ -247,10 +247,10 @@ function AddStudentModal({ onClose, onCreate }) {
 
   return (
     <div style={styles.modalOverlay} onClick={onClose}>
-      <div style={styles.modal} onClick={(e) => e.stopPropagation()}>
+      <div style={styles.modal} className="tl-modal" onClick={(e) => e.stopPropagation()}>
         <div style={styles.modalHeader}>
           <div style={styles.modalTitle}>Novo aluno</div>
-          <X size={18} color="#8A8478" style={{ cursor: "pointer" }} onClick={onClose} />
+          <X size={18} color="#7C8797" style={{ cursor: "pointer" }} onClick={onClose} />
         </div>
         <div style={styles.formGroup}>
           <label style={styles.label}>Nome</label>
@@ -294,7 +294,7 @@ function StudentDetail({ student, tab, setTab, onUpdate, onDelete }) {
 
   return (
     <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
-      <div style={styles.detailHeader}>
+      <div style={styles.detailHeader} className="tl-detail-header">
         <PlateRing name={student.name || "?"} id={student.id} size={52} />
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={styles.detailName}>{student.name || "(sem nome)"}</div>
@@ -305,7 +305,7 @@ function StudentDetail({ student, tab, setTab, onUpdate, onDelete }) {
         </div>
         {!confirmDelete ? (
           <button style={styles.iconBtn} onClick={() => setConfirmDelete(true)} title="Remover aluno">
-            <Trash2 size={15} color="#8A8478" />
+            <Trash2 size={15} color="#7C8797" />
           </button>
         ) : (
           <div style={styles.confirmRow}>
@@ -322,18 +322,19 @@ function StudentDetail({ student, tab, setTab, onUpdate, onDelete }) {
         )}
       </div>
 
-      <div style={styles.tabRow}>
+      <div style={styles.tabRow} className="tl-tab-row">
         {tabs.map((t) => {
           const Icon = t.icon;
           const active = tab === t.id;
           return (
             <button
               key={t.id}
+              className="tl-tab-btn"
               onClick={() => setTab(t.id)}
               style={{
                 ...styles.tabBtn,
-                color: active ? "#EDE9E2" : "#8A8478",
-                borderBottom: active ? "2px solid #C98A3E" : "2px solid transparent",
+                color: active ? "#E6E9EF" : "#7C8797",
+                borderBottom: active ? "2px solid #4C7FBF" : "2px solid transparent",
               }}
             >
               <Icon size={14} /> {t.label}
@@ -355,7 +356,7 @@ function StudentDetail({ student, tab, setTab, onUpdate, onDelete }) {
 function DadosTab({ student, onUpdate }) {
   return (
     <div style={styles.panel}>
-      <div style={styles.fieldGrid}>
+      <div style={styles.fieldGrid} className="tl-field-grid">
         <Field label="Nome" value={student.name} onChange={(v) => onUpdate({ name: v })} />
         <Field label="Telemóvel" value={student.phone} onChange={(v) => onUpdate({ phone: v })} />
         <Field label="Email" value={student.email} onChange={(v) => onUpdate({ email: v })} />
@@ -492,7 +493,7 @@ function PlanoTab({ student, onUpdate }) {
     <div style={styles.panel}>
       {weeks.length === 0 && (
         <div style={styles.emptyBlock}>
-          <AlertCircle size={16} color="#5B5650" />
+          <AlertCircle size={16} color="#5C6675" />
           <span>Ainda não há semanas de treino. Adiciona a primeira — vem com 7 treinos prontos a preencher.</span>
         </div>
       )}
@@ -503,9 +504,9 @@ function PlanoTab({ student, onUpdate }) {
           <div key={week.id} style={styles.monthCard}>
             <div style={styles.monthHeader}>
               {weekOpen ? (
-                <ChevronDown size={15} color="#8A8478" style={{ cursor: "pointer" }} onClick={() => toggleWeek(week.id)} />
+                <ChevronDown size={15} color="#7C8797" style={{ cursor: "pointer" }} onClick={() => toggleWeek(week.id)} />
               ) : (
-                <ChevronRight size={15} color="#8A8478" style={{ cursor: "pointer" }} onClick={() => toggleWeek(week.id)} />
+                <ChevronRight size={15} color="#7C8797" style={{ cursor: "pointer" }} onClick={() => toggleWeek(week.id)} />
               )}
               <input
                 style={styles.monthTitleInput}
@@ -513,7 +514,24 @@ function PlanoTab({ student, onUpdate }) {
                 onChange={(e) => updateWeek(week.id, { label: e.target.value })}
               />
               <span style={styles.weekCountBadge}>{week.days.length} treinos</span>
-              <Trash2 size={14} color="#8A8478" style={{ cursor: "pointer" }} onClick={() => removeWeek(week.id)} />
+              <Trash2 size={14} color="#7C8797" style={{ cursor: "pointer" }} onClick={() => removeWeek(week.id)} />
+            </div>
+
+            <div style={styles.weekDatesRow}>
+              <span style={styles.weekDatesLabel}>De</span>
+              <input
+                type="date"
+                style={styles.weekDateInput}
+                value={week.startDate || ""}
+                onChange={(e) => updateWeek(week.id, { startDate: e.target.value })}
+              />
+              <span style={styles.weekDatesLabel}>até</span>
+              <input
+                type="date"
+                style={styles.weekDateInput}
+                value={week.endDate || ""}
+                onChange={(e) => updateWeek(week.id, { endDate: e.target.value })}
+              />
             </div>
 
             {weekOpen && (
@@ -526,7 +544,13 @@ function PlanoTab({ student, onUpdate }) {
                         value={day.label}
                         onChange={(e) => updateDay(week.id, day.id, { label: e.target.value })}
                       />
-                      <Trash2 size={14} color="#8A8478" style={{ cursor: "pointer" }} onClick={() => removeDay(week.id, day.id)} />
+                      <input
+                        type="date"
+                        style={styles.dayDateInput}
+                        value={day.date || ""}
+                        onChange={(e) => updateDay(week.id, day.id, { date: e.target.value })}
+                      />
+                      <Trash2 size={14} color="#7C8797" style={{ cursor: "pointer" }} onClick={() => removeDay(week.id, day.id)} />
                     </div>
 
                     <div style={styles.warmupBlock}>
@@ -552,64 +576,68 @@ function PlanoTab({ student, onUpdate }) {
                           />
                           <Trash2
                             size={15}
-                            color="#8A8478"
+                            color="#7C8797"
                             style={{ cursor: "pointer" }}
                             onClick={() => removeExercise(week.id, day.id, ex.id)}
                           />
                         </div>
 
-                        <div style={styles.setTableHead}>
-                          <span style={{ width: 28 }}>Série</span>
-                          <span style={{ flex: 1 }}>Reps</span>
-                          <span style={{ flex: 1 }}>Carga</span>
-                          <span style={{ flex: 1 }}>RIR P.</span>
-                          <span style={{ flex: 1 }}>RIR R.</span>
-                          <span style={{ width: 16 }} />
-                        </div>
-
-                        {(Array.isArray(ex.sets) ? ex.sets : []).map((s, i) => (
-                          <div key={s.id}>
-                            <div style={styles.setRow}>
-                              <span style={styles.setNumber}>{i + 1}</span>
-                              <input
-                                style={{ ...styles.cellInput, flex: 1, textAlign: "center" }}
-                                value={s.reps}
-                                onChange={(e) => updateSet(week.id, day.id, ex.id, s.id, { reps: e.target.value })}
-                                placeholder="-"
-                              />
-                              <input
-                                style={{ ...styles.cellInput, flex: 1, textAlign: "center" }}
-                                value={s.load}
-                                onChange={(e) => updateSet(week.id, day.id, ex.id, s.id, { load: e.target.value })}
-                                placeholder="-"
-                              />
-                              <input
-                                style={{ ...styles.cellInput, flex: 1, textAlign: "center" }}
-                                value={s.rirP}
-                                onChange={(e) => updateSet(week.id, day.id, ex.id, s.id, { rirP: e.target.value })}
-                                placeholder="-"
-                              />
-                              <input
-                                style={{ ...styles.cellInput, flex: 1, textAlign: "center" }}
-                                value={s.rirR}
-                                onChange={(e) => updateSet(week.id, day.id, ex.id, s.id, { rirR: e.target.value })}
-                                placeholder="-"
-                              />
-                              <X
-                                size={13}
-                                color="#5B5650"
-                                style={{ cursor: "pointer", width: 16 }}
-                                onClick={() => removeSet(week.id, day.id, ex.id, s.id)}
-                              />
+                        <div style={{ overflowX: "auto" }}>
+                          <div style={{ minWidth: 380 }}>
+                            <div style={styles.setTableHead}>
+                              <span style={{ width: 28 }}>Série</span>
+                              <span style={{ flex: 1 }}>Reps</span>
+                              <span style={{ flex: 1 }}>Carga</span>
+                              <span style={{ flex: 1 }}>RIR P.</span>
+                              <span style={{ flex: 1 }}>RIR R.</span>
+                              <span style={{ width: 16 }} />
                             </div>
-                            <input
-                              style={styles.setNotesInput}
-                              value={s.notes}
-                              onChange={(e) => updateSet(week.id, day.id, ex.id, s.id, { notes: e.target.value })}
-                              placeholder={`Observações série ${i + 1} (opcional)`}
-                            />
+
+                            {(Array.isArray(ex.sets) ? ex.sets : []).map((s, i) => (
+                              <div key={s.id}>
+                                <div style={styles.setRow}>
+                                  <span style={styles.setNumber}>{i + 1}</span>
+                                  <input
+                                    style={{ ...styles.cellInput, flex: 1, textAlign: "center" }}
+                                    value={s.reps}
+                                    onChange={(e) => updateSet(week.id, day.id, ex.id, s.id, { reps: e.target.value })}
+                                    placeholder="-"
+                                  />
+                                  <input
+                                    style={{ ...styles.cellInput, flex: 1, textAlign: "center" }}
+                                    value={s.load}
+                                    onChange={(e) => updateSet(week.id, day.id, ex.id, s.id, { load: e.target.value })}
+                                    placeholder="-"
+                                  />
+                                  <input
+                                    style={{ ...styles.cellInput, flex: 1, textAlign: "center" }}
+                                    value={s.rirP}
+                                    onChange={(e) => updateSet(week.id, day.id, ex.id, s.id, { rirP: e.target.value })}
+                                    placeholder="-"
+                                  />
+                                  <input
+                                    style={{ ...styles.cellInput, flex: 1, textAlign: "center" }}
+                                    value={s.rirR}
+                                    onChange={(e) => updateSet(week.id, day.id, ex.id, s.id, { rirR: e.target.value })}
+                                    placeholder="-"
+                                  />
+                                  <X
+                                    size={13}
+                                    color="#5C6675"
+                                    style={{ cursor: "pointer", width: 16 }}
+                                    onClick={() => removeSet(week.id, day.id, ex.id, s.id)}
+                                  />
+                                </div>
+                                <input
+                                  style={styles.setNotesInput}
+                                  value={s.notes}
+                                  onChange={(e) => updateSet(week.id, day.id, ex.id, s.id, { notes: e.target.value })}
+                                  placeholder={`Observações série ${i + 1} (opcional)`}
+                                />
+                              </div>
+                            ))}
                           </div>
-                        ))}
+                        </div>
 
                         <button style={styles.addSetBtn} onClick={() => addSet(week.id, day.id, ex.id)}>
                           + Série
@@ -750,11 +778,11 @@ function AvaliacaoTab({ student, onUpdate }) {
           </div>
           <ResponsiveContainer width="100%" height={160}>
             <LineChart data={chartData}>
-              <CartesianGrid stroke="#2A2621" strokeDasharray="3 3" />
-              <XAxis dataKey="date" tick={{ fill: "#8A8478", fontSize: 11 }} axisLine={{ stroke: "#3A362F" }} />
-              <YAxis tick={{ fill: "#8A8478", fontSize: 11 }} axisLine={{ stroke: "#3A362F" }} domain={["auto", "auto"]} />
-              <Tooltip contentStyle={{ background: "#211E1A", border: "1px solid #3A362F", fontSize: 12 }} />
-              <Line type="monotone" dataKey="peso" stroke="#C98A3E" strokeWidth={2} dot={{ r: 3 }} />
+              <CartesianGrid stroke="#232A38" strokeDasharray="3 3" />
+              <XAxis dataKey="date" tick={{ fill: "#7C8797", fontSize: 11 }} axisLine={{ stroke: "#2E3644" }} />
+              <YAxis tick={{ fill: "#7C8797", fontSize: 11 }} axisLine={{ stroke: "#2E3644" }} domain={["auto", "auto"]} />
+              <Tooltip contentStyle={{ background: "#171C26", border: "1px solid #2E3644", fontSize: 12 }} />
+              <Line type="monotone" dataKey="peso" stroke="#4C7FBF" strokeWidth={2} dot={{ r: 3 }} />
             </LineChart>
           </ResponsiveContainer>
         </div>
@@ -769,7 +797,7 @@ function AvaliacaoTab({ student, onUpdate }) {
         {ASSESS_SECTIONS.map((section) => (
           <div key={section.title} style={styles.assessSection}>
             <div style={styles.assessSectionTitle}>{section.title}</div>
-            <div style={styles.assessGrid}>
+            <div style={styles.assessGrid} className="tl-assess-grid">
               {section.fields.map((f) => (
                 <MiniField
                   key={f.key}
@@ -802,13 +830,13 @@ function AvaliacaoTab({ student, onUpdate }) {
           .reverse()
           .map((a) => (
             <div key={a.id} style={styles.historyRow}>
-              <Calendar size={13} color="#8A8478" />
+              <Calendar size={13} color="#7C8797" />
               <span style={styles.historyDate}>{new Date(a.date).toLocaleDateString("pt-PT")}</span>
               <span style={styles.historyStats}>
                 {a.weight && `${a.weight}kg`} {a.bioimpedancia && `· ${a.bioimpedancia}% MG`}{" "}
                 {a.cintura && `· cintura ${a.cintura}cm`}
               </span>
-              <X size={13} color="#5B5650" style={{ cursor: "pointer", marginLeft: "auto" }} onClick={() => removeAssessment(a.id)} />
+              <X size={13} color="#5C6675" style={{ cursor: "pointer", marginLeft: "auto" }} onClick={() => removeAssessment(a.id)} />
             </div>
           ))}
       </div>
@@ -828,14 +856,34 @@ function MiniField({ label, value, onChange, type = "text" }) {
 // ---------- styles ----------
 const fontImports = `
 @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
+* { box-sizing: border-box; }
+html, body { overflow-x: hidden; }
+
+@media (max-width: 720px) {
+  .tl-app { flex-direction: column !important; height: 100dvh !important; }
+  .tl-sidebar {
+    width: 100% !important;
+    max-height: 40vh;
+    border-right: none !important;
+    border-bottom: 1px solid #232A38;
+  }
+  .tl-main { min-height: 0; }
+  .tl-field-grid { grid-template-columns: 1fr !important; }
+  .tl-assess-grid { grid-template-columns: repeat(2, 1fr) !important; }
+  .tl-modal { width: 90vw !important; }
+  .tl-detail-header { flex-wrap: wrap; gap: 8px !important; }
+  .tl-tab-row { overflow-x: auto; }
+  .tl-tab-btn { white-space: nowrap; }
+}
 `;
 
 const styles = {
   app: {
     display: "flex",
     height: "100vh",
-    background: "#171512",
-    color: "#EDE9E2",
+    background: "#0A0E14",
+    color: "#E6E9EF",
     fontFamily: "'Inter', sans-serif",
   },
   loadingScreen: {
@@ -843,11 +891,11 @@ const styles = {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    background: "#171512",
+    background: "#0A0E14",
   },
   sidebar: {
     width: 280,
-    borderRight: "1px solid #2A2621",
+    borderRight: "1px solid #232A38",
     display: "flex",
     flexDirection: "column",
     flexShrink: 0,
@@ -857,8 +905,8 @@ const styles = {
     width: 34,
     height: 34,
     borderRadius: 8,
-    background: "#C98A3E",
-    color: "#171512",
+    background: "#4C7FBF",
+    color: "#0A0E14",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
@@ -867,22 +915,22 @@ const styles = {
     fontSize: 14,
   },
   brandTitle: { fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700, fontSize: 14, letterSpacing: 0.5 },
-  brandSub: { fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, color: "#8A8478", marginTop: 1 },
+  brandSub: { fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, color: "#7C8797", marginTop: 1 },
   searchRow: {
     display: "flex",
     alignItems: "center",
     gap: 8,
     margin: "0 16px 10px",
     padding: "7px 10px",
-    background: "#1D1A16",
-    border: "1px solid #2A2621",
+    background: "#12161F",
+    border: "1px solid #232A38",
     borderRadius: 7,
   },
   searchInput: {
     background: "transparent",
     border: "none",
     outline: "none",
-    color: "#EDE9E2",
+    color: "#E6E9EF",
     fontSize: 12.5,
     width: "100%",
     fontFamily: "'Inter', sans-serif",
@@ -895,15 +943,15 @@ const styles = {
     margin: "0 16px 14px",
     padding: "8px 10px",
     background: "transparent",
-    border: "1px dashed #3A362F",
+    border: "1px dashed #2E3644",
     borderRadius: 7,
-    color: "#C98A3E",
+    color: "#4C7FBF",
     fontSize: 12.5,
     fontFamily: "'IBM Plex Mono', monospace",
     cursor: "pointer",
   },
   studentList: { overflowY: "auto", flex: 1, padding: "0 8px 12px" },
-  emptyHint: { color: "#5B5650", fontSize: 12, padding: "10px 12px", fontFamily: "'IBM Plex Mono', monospace" },
+  emptyHint: { color: "#5C6675", fontSize: 12, padding: "10px 12px", fontFamily: "'IBM Plex Mono', monospace" },
   studentRow: {
     display: "flex",
     alignItems: "center",
@@ -916,7 +964,7 @@ const styles = {
   studentName: { fontSize: 13, fontWeight: 500, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" },
   studentMeta: {
     fontSize: 10.5,
-    color: "#8A8478",
+    color: "#7C8797",
     fontFamily: "'IBM Plex Mono', monospace",
     overflow: "hidden",
     textOverflow: "ellipsis",
@@ -930,10 +978,10 @@ const styles = {
     alignItems: "center",
     justifyContent: "center",
   },
-  detailHeader: { display: "flex", alignItems: "center", gap: 14, padding: "20px 24px 16px", borderBottom: "1px solid #2A2621" },
+  detailHeader: { display: "flex", alignItems: "center", gap: 14, padding: "20px 24px 16px", borderBottom: "1px solid #232A38" },
   detailName: { fontFamily: "'Space Grotesk', sans-serif", fontWeight: 600, fontSize: 18 },
-  detailMeta: { fontFamily: "'IBM Plex Mono', monospace", fontSize: 11.5, color: "#8A8478", marginTop: 2 },
-  iconBtn: { background: "transparent", border: "1px solid #2A2621", borderRadius: 6, padding: 7, cursor: "pointer" },
+  detailMeta: { fontFamily: "'IBM Plex Mono', monospace", fontSize: 11.5, color: "#7C8797", marginTop: 2 },
+  iconBtn: { background: "transparent", border: "1px solid #232A38", borderRadius: 6, padding: 7, cursor: "pointer" },
   confirmRow: { display: "flex", alignItems: "center", gap: 8 },
   confirmYes: {
     background: "#B25146",
@@ -946,14 +994,14 @@ const styles = {
   },
   confirmNo: {
     background: "transparent",
-    color: "#8A8478",
-    border: "1px solid #2A2621",
+    color: "#7C8797",
+    border: "1px solid #232A38",
     borderRadius: 5,
     padding: "5px 10px",
     fontSize: 11.5,
     cursor: "pointer",
   },
-  tabRow: { display: "flex", gap: 4, padding: "0 24px", borderBottom: "1px solid #2A2621" },
+  tabRow: { display: "flex", gap: 4, padding: "0 24px", borderBottom: "1px solid #232A38" },
   tabBtn: {
     display: "flex",
     alignItems: "center",
@@ -968,15 +1016,15 @@ const styles = {
   tabContent: { flex: 1, overflowY: "auto", padding: "20px 24px 40px" },
   panel: { maxWidth: 720 },
   fieldGrid: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 16 },
-  label: { display: "block", fontSize: 11, color: "#8A8478", fontFamily: "'IBM Plex Mono', monospace", marginBottom: 5 },
-  miniLabel: { display: "block", fontSize: 10, color: "#8A8478", fontFamily: "'IBM Plex Mono', monospace", marginBottom: 4 },
+  label: { display: "block", fontSize: 11, color: "#7C8797", fontFamily: "'IBM Plex Mono', monospace", marginBottom: 5 },
+  miniLabel: { display: "block", fontSize: 10, color: "#7C8797", fontFamily: "'IBM Plex Mono', monospace", marginBottom: 4 },
   input: {
     width: "100%",
-    background: "#1D1A16",
-    border: "1px solid #2A2621",
+    background: "#12161F",
+    border: "1px solid #232A38",
     borderRadius: 6,
     padding: "8px 10px",
-    color: "#EDE9E2",
+    color: "#E6E9EF",
     fontSize: 13,
     fontFamily: "'Inter', sans-serif",
     outline: "none",
@@ -984,11 +1032,11 @@ const styles = {
   },
   textarea: {
     width: "100%",
-    background: "#1D1A16",
-    border: "1px solid #2A2621",
+    background: "#12161F",
+    border: "1px solid #232A38",
     borderRadius: 6,
     padding: "9px 10px",
-    color: "#EDE9E2",
+    color: "#E6E9EF",
     fontSize: 13,
     fontFamily: "'Inter', sans-serif",
     outline: "none",
@@ -999,24 +1047,24 @@ const styles = {
     display: "flex",
     alignItems: "center",
     gap: 8,
-    color: "#8A8478",
+    color: "#7C8797",
     fontSize: 12.5,
     fontFamily: "'IBM Plex Mono', monospace",
     padding: "16px 0",
   },
   monthCard: {
-    background: "#1A1713",
-    border: "1px solid #2A2621",
+    background: "#10141C",
+    border: "1px solid #232A38",
     borderRadius: 10,
     padding: "12px 14px",
     marginBottom: 12,
   },
   weekCountBadge: {
     fontSize: 10.5,
-    color: "#8A8478",
+    color: "#7C8797",
     fontFamily: "'IBM Plex Mono', monospace",
-    background: "#211E1A",
-    border: "1px solid #2A2621",
+    background: "#171C26",
+    border: "1px solid #232A38",
     borderRadius: 5,
     padding: "3px 7px",
     flexShrink: 0,
@@ -1026,22 +1074,45 @@ const styles = {
     flex: 1,
     background: "transparent",
     border: "none",
-    color: "#EDE9E2",
+    color: "#E6E9EF",
     fontFamily: "'Space Grotesk', sans-serif",
     fontWeight: 700,
     fontSize: 15,
     outline: "none",
   },
-  monthBody: { marginTop: 10, paddingLeft: 14, borderLeft: "2px solid #2A2621" },
+  weekDatesRow: { display: "flex", alignItems: "center", gap: 6, marginTop: 6, paddingLeft: 23 },
+  weekDatesLabel: { fontSize: 10.5, color: "#5C6675", fontFamily: "'IBM Plex Mono', monospace" },
+  weekDateInput: {
+    background: "#0A0E14",
+    border: "1px solid #232A38",
+    borderRadius: 5,
+    padding: "3px 6px",
+    color: "#7C8797",
+    fontSize: 11,
+    fontFamily: "'IBM Plex Mono', monospace",
+    outline: "none",
+  },
+  dayDateInput: {
+    background: "#0A0E14",
+    border: "1px solid #232A38",
+    borderRadius: 5,
+    padding: "5px 7px",
+    color: "#7C8797",
+    fontSize: 11,
+    fontFamily: "'IBM Plex Mono', monospace",
+    outline: "none",
+    flexShrink: 0,
+  },
+  monthBody: { marginTop: 10, paddingLeft: 14, borderLeft: "2px solid #232A38" },
   emptyBlockSmall: {
-    color: "#5B5650",
+    color: "#5C6675",
     fontSize: 11.5,
     fontFamily: "'IBM Plex Mono', monospace",
     padding: "4px 0 10px",
   },
   weekCard: {
-    background: "#1D1A16",
-    border: "1px solid #2A2621",
+    background: "#12161F",
+    border: "1px solid #232A38",
     borderRadius: 9,
     padding: "10px 12px",
     marginBottom: 10,
@@ -1051,47 +1122,47 @@ const styles = {
     flex: 1,
     background: "transparent",
     border: "none",
-    color: "#EDE9E2",
+    color: "#E6E9EF",
     fontFamily: "'IBM Plex Mono', monospace",
     fontWeight: 600,
     fontSize: 12.5,
     outline: "none",
   },
-  weekBody: { marginTop: 8, paddingLeft: 12, borderLeft: "2px solid #2A2621" },
+  weekBody: { marginTop: 8, paddingLeft: 12, borderLeft: "2px solid #232A38" },
   addWeekBtn: {
     display: "flex",
     alignItems: "center",
     gap: 6,
     background: "transparent",
-    border: "1px dashed #3A362F",
+    border: "1px dashed #2E3644",
     borderRadius: 7,
     padding: "7px 12px",
-    color: "#C98A3E",
+    color: "#4C7FBF",
     fontSize: 12,
     fontFamily: "'IBM Plex Mono', monospace",
     cursor: "pointer",
   },
-  dayCard: { background: "#211E1A", border: "1px solid #2A2621", borderRadius: 9, padding: 14, marginBottom: 10 },
+  dayCard: { background: "#171C26", border: "1px solid #232A38", borderRadius: 9, padding: 14, marginBottom: 10 },
   dayHeader: { display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 },
   dayTitleInput: {
     background: "transparent",
     border: "none",
-    color: "#EDE9E2",
+    color: "#E6E9EF",
     fontFamily: "'Space Grotesk', sans-serif",
     fontWeight: 600,
     fontSize: 14,
     outline: "none",
   },
   warmupBlock: {
-    background: "#1A1713",
-    border: "1px solid #2A2621",
+    background: "#10141C",
+    border: "1px solid #232A38",
     borderRadius: 7,
     padding: "10px 10px",
     marginBottom: 12,
   },
   warmupLabel: {
     fontSize: 10.5,
-    color: "#C98A3E",
+    color: "#4C7FBF",
     fontFamily: "'IBM Plex Mono', monospace",
     textTransform: "uppercase",
     letterSpacing: 0.6,
@@ -1099,11 +1170,11 @@ const styles = {
   },
   warmupTextarea: {
     width: "100%",
-    background: "#171512",
-    border: "1px solid #2A2621",
+    background: "#0A0E14",
+    border: "1px solid #232A38",
     borderRadius: 6,
     padding: "9px 10px",
-    color: "#EDE9E2",
+    color: "#E6E9EF",
     fontSize: 12.5,
     fontFamily: "'Inter', sans-serif",
     outline: "none",
@@ -1111,8 +1182,8 @@ const styles = {
     boxSizing: "border-box",
   },
   exerciseBlock: {
-    background: "#1A1713",
-    border: "1px solid #2A2621",
+    background: "#10141C",
+    border: "1px solid #232A38",
     borderRadius: 9,
     padding: 12,
     marginBottom: 10,
@@ -1122,9 +1193,9 @@ const styles = {
     width: 22,
     height: 22,
     borderRadius: 5,
-    background: "#211E1A",
-    border: "1px solid #2A2621",
-    color: "#8A8478",
+    background: "#171C26",
+    border: "1px solid #232A38",
+    color: "#7C8797",
     fontFamily: "'IBM Plex Mono', monospace",
     fontSize: 11,
     display: "flex",
@@ -1134,11 +1205,11 @@ const styles = {
   },
   exerciseNameInput: {
     flex: 1,
-    background: "#171512",
-    border: "1px solid #2A2621",
+    background: "#0A0E14",
+    border: "1px solid #232A38",
     borderRadius: 6,
     padding: "7px 10px",
-    color: "#EDE9E2",
+    color: "#E6E9EF",
     fontFamily: "'Space Grotesk', sans-serif",
     fontWeight: 600,
     fontSize: 13.5,
@@ -1149,12 +1220,12 @@ const styles = {
     display: "flex",
     gap: 6,
     fontSize: 9.5,
-    color: "#5B5650",
+    color: "#5C6675",
     fontFamily: "'IBM Plex Mono', monospace",
     textTransform: "uppercase",
     letterSpacing: 0.4,
     padding: "0 2px 5px",
-    borderBottom: "1px solid #2A2621",
+    borderBottom: "1px solid #232A38",
     marginBottom: 6,
   },
   setRow: { display: "flex", gap: 6, alignItems: "center", marginBottom: 4 },
@@ -1162,17 +1233,17 @@ const styles = {
     width: 28,
     flexShrink: 0,
     fontSize: 11,
-    color: "#8A8478",
+    color: "#7C8797",
     fontFamily: "'IBM Plex Mono', monospace",
     textAlign: "center",
   },
   setNotesInput: {
     width: "100%",
-    background: "#171512",
-    border: "1px solid #2A2621",
+    background: "#0A0E14",
+    border: "1px solid #232A38",
     borderRadius: 5,
     padding: "6px 8px",
-    color: "#8A8478",
+    color: "#7C8797",
     fontSize: 11.5,
     fontFamily: "'Inter', sans-serif",
     outline: "none",
@@ -1182,11 +1253,11 @@ const styles = {
   },
   addSetBtn: {
     background: "transparent",
-    border: "1px dashed #3A362F",
+    border: "1px dashed #2E3644",
     borderRadius: 6,
     padding: "6px 0",
     width: "100%",
-    color: "#C98A3E",
+    color: "#4C7FBF",
     fontSize: 11.5,
     fontFamily: "'IBM Plex Mono', monospace",
     cursor: "pointer",
@@ -1195,7 +1266,7 @@ const styles = {
   volumeRow: {
     textAlign: "right",
     fontSize: 11,
-    color: "#8A8478",
+    color: "#7C8797",
     fontFamily: "'IBM Plex Mono', monospace",
     marginTop: 8,
   },
@@ -1203,19 +1274,19 @@ const styles = {
     display: "flex",
     gap: 8,
     fontSize: 10,
-    color: "#5B5650",
+    color: "#5C6675",
     fontFamily: "'IBM Plex Mono', monospace",
     padding: "0 2px 6px",
-    borderBottom: "1px solid #2A2621",
+    borderBottom: "1px solid #232A38",
     marginBottom: 6,
   },
   exerciseRow: { display: "flex", gap: 8, alignItems: "center", marginBottom: 6 },
   cellInput: {
-    background: "#171512",
-    border: "1px solid #2A2621",
+    background: "#0A0E14",
+    border: "1px solid #232A38",
     borderRadius: 5,
     padding: "6px 8px",
-    color: "#EDE9E2",
+    color: "#E6E9EF",
     fontSize: 12.5,
     fontFamily: "'Inter', sans-serif",
     outline: "none",
@@ -1228,7 +1299,7 @@ const styles = {
     gap: 5,
     background: "transparent",
     border: "none",
-    color: "#C98A3E",
+    color: "#4C7FBF",
     fontSize: 12,
     fontFamily: "'IBM Plex Mono', monospace",
     cursor: "pointer",
@@ -1240,31 +1311,31 @@ const styles = {
     alignItems: "center",
     gap: 6,
     background: "transparent",
-    border: "1px dashed #3A362F",
+    border: "1px dashed #2E3644",
     borderRadius: 8,
     padding: "10px 14px",
-    color: "#C98A3E",
+    color: "#4C7FBF",
     fontSize: 12.5,
     fontFamily: "'IBM Plex Mono', monospace",
     cursor: "pointer",
   },
-  chartCard: { background: "#1D1A16", border: "1px solid #2A2621", borderRadius: 9, padding: 14, marginBottom: 16 },
+  chartCard: { background: "#12161F", border: "1px solid #232A38", borderRadius: 9, padding: 14, marginBottom: 16 },
   chartTitle: {
     display: "flex",
     alignItems: "center",
     gap: 6,
     fontSize: 11,
-    color: "#8A8478",
+    color: "#7C8797",
     fontFamily: "'IBM Plex Mono', monospace",
     marginBottom: 6,
     textTransform: "uppercase",
     letterSpacing: 0.5,
   },
-  assessFormCard: { background: "#1D1A16", border: "1px solid #2A2621", borderRadius: 9, padding: 14, marginBottom: 16 },
-  assessSection: { marginBottom: 14, paddingTop: 10, borderTop: "1px solid #2A2621" },
+  assessFormCard: { background: "#12161F", border: "1px solid #232A38", borderRadius: 9, padding: 14, marginBottom: 16 },
+  assessSection: { marginBottom: 14, paddingTop: 10, borderTop: "1px solid #232A38" },
   assessSectionTitle: {
     fontSize: 10.5,
-    color: "#C98A3E",
+    color: "#4C7FBF",
     fontFamily: "'IBM Plex Mono', monospace",
     textTransform: "uppercase",
     letterSpacing: 0.6,
@@ -1276,14 +1347,14 @@ const styles = {
     display: "flex",
     alignItems: "center",
     gap: 8,
-    background: "#1D1A16",
-    border: "1px solid #2A2621",
+    background: "#12161F",
+    border: "1px solid #232A38",
     borderRadius: 7,
     padding: "8px 12px",
     fontSize: 12,
   },
-  historyDate: { fontFamily: "'IBM Plex Mono', monospace", color: "#EDE9E2", width: 80 },
-  historyStats: { color: "#8A8478" },
+  historyDate: { fontFamily: "'IBM Plex Mono', monospace", color: "#E6E9EF", width: 80 },
+  historyStats: { color: "#7C8797" },
   modalOverlay: {
     position: "fixed",
     inset: 0,
@@ -1294,8 +1365,8 @@ const styles = {
     zIndex: 50,
   },
   modal: {
-    background: "#1D1A16",
-    border: "1px solid #2A2621",
+    background: "#12161F",
+    border: "1px solid #232A38",
     borderRadius: 12,
     padding: 22,
     width: 340,
@@ -1309,8 +1380,8 @@ const styles = {
     alignItems: "center",
     justifyContent: "center",
     gap: 7,
-    background: "#C98A3E",
-    color: "#171512",
+    background: "#4C7FBF",
+    color: "#0A0E14",
     border: "none",
     borderRadius: 7,
     padding: "10px 0",
