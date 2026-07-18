@@ -1,23 +1,28 @@
 import React, { useState, useEffect, useMemo, useRef } from "react";
 import { Plus, X, Trash2, Search, Dumbbell, Activity, User, ChevronRight, ChevronDown, Save, Calendar, TrendingUp, AlertCircle } from "lucide-react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
+import { supabase } from "./supabaseClient.js";
 
-// ---------- storage helpers ----------
+// ---------- storage helpers (Supabase) ----------
 const KEY = "titan-leca-data-v1";
 
 async function loadData() {
   try {
-    const res = await window.storage.get(KEY, true);
-    if (res && res.value) return JSON.parse(res.value);
+    const { data, error } = await supabase.from("app_data").select("value").eq("key", KEY).maybeSingle();
+    if (error) throw error;
+    if (data && data.value) return data.value;
   } catch (e) {
-    // key not found or error — start fresh
+    console.error("Erro ao carregar dados", e);
   }
   return { students: [] };
 }
 
 async function saveData(data) {
   try {
-    await window.storage.set(KEY, JSON.stringify(data), true);
+    const { error } = await supabase
+      .from("app_data")
+      .upsert({ key: KEY, value: data, updated_at: new Date().toISOString() });
+    if (error) throw error;
   } catch (e) {
     console.error("Erro ao guardar dados", e);
   }
@@ -477,7 +482,10 @@ function PlanoTab({ student, onUpdate }) {
   }
 
   function exerciseVolume(ex) {
-    return (ex.sets || []).reduce((sum, s) => sum + (parseFloat(s.reps) || 0) * (parseFloat(s.load) || 0), 0);
+    return (Array.isArray(ex.sets) ? ex.sets : []).reduce(
+      (sum, s) => sum + (parseFloat(s.reps) || 0) * (parseFloat(s.load) || 0),
+      0
+    );
   }
 
   return (
@@ -559,7 +567,7 @@ function PlanoTab({ student, onUpdate }) {
                           <span style={{ width: 16 }} />
                         </div>
 
-                        {(ex.sets || []).map((s, i) => (
+                        {(Array.isArray(ex.sets) ? ex.sets : []).map((s, i) => (
                           <div key={s.id}>
                             <div style={styles.setRow}>
                               <span style={styles.setNumber}>{i + 1}</span>
