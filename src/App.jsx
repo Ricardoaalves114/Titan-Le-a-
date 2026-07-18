@@ -257,6 +257,7 @@ export default function App() {
             setTab={setTab}
             onUpdate={(patch) => updateStudent(selected.id, patch)}
             onDelete={() => deleteStudent(selected.id)}
+            onScrollDown={() => setListOpen(false)}
           />
         )}
       </main>
@@ -312,7 +313,7 @@ function AddStudentModal({ onClose, onCreate }) {
 }
 
 // ---------- Student detail ----------
-function StudentDetail({ student, tab, setTab, onUpdate, onDelete }) {
+function StudentDetail({ student, tab, setTab, onUpdate, onDelete, onScrollDown }) {
   const [confirmDelete, setConfirmDelete] = useState(false);
 
   const tabs = [
@@ -372,7 +373,12 @@ function StudentDetail({ student, tab, setTab, onUpdate, onDelete }) {
         })}
       </div>
 
-      <div style={styles.tabContent}>
+      <div
+        style={styles.tabContent}
+        onScroll={(e) => {
+          if (e.currentTarget.scrollTop > 8) onScrollDown();
+        }}
+      >
         {tab === "dados" && <DadosTab student={student} onUpdate={onUpdate} />}
         {tab === "plano" && <PlanoTab student={student} onUpdate={onUpdate} />}
         {tab === "avaliacao" && <AvaliacaoTab student={student} onUpdate={onUpdate} />}
