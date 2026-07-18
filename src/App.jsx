@@ -100,6 +100,7 @@ export default function App() {
   const [tab, setTab] = useState("dados");
   const [query, setQuery] = useState("");
   const [showAdd, setShowAdd] = useState(false);
+  const [listOpen, setListOpen] = useState(true);
   const saveTimer = useRef(null);
 
   useEffect(() => {
@@ -138,11 +139,18 @@ export default function App() {
     setSelectedId(student.id);
     setShowAdd(false);
     setTab("dados");
+    setListOpen(false);
   }
 
   function deleteStudent(id) {
     setData((d) => ({ ...d, students: d.students.filter((s) => s.id !== id) }));
     if (selectedId === id) setSelectedId(null);
+  }
+
+  function selectStudent(id) {
+    setSelectedId(id);
+    setTab("dados");
+    setListOpen(false);
   }
 
   if (loading) {
@@ -158,57 +166,78 @@ export default function App() {
   return (
     <div style={styles.app} className="tl-app">
       <style>{fontImports}</style>
-      <aside style={styles.sidebar} className="tl-sidebar">
-        <div style={styles.brand}>
-          <div style={styles.brandMark}>TL</div>
-          <div>
-            <div style={styles.brandTitle}>TITAN LEÇA</div>
-            <div style={styles.brandSub}>painel de coaches</div>
+      <aside
+        style={styles.sidebar}
+        className={`tl-sidebar${selected && !listOpen ? " tl-sidebar-collapsed" : ""}`}
+      >
+        {selected && !listOpen ? (
+          <div style={styles.collapsedBar} onClick={() => setListOpen(true)}>
+            <PlateRing name={selected.name || "?"} id={selected.id} size={30} />
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={styles.collapsedName}>{selected.name || "(sem nome)"}</div>
+              <div style={styles.collapsedHint}>toca para trocar de aluno</div>
+            </div>
+            <ChevronDown size={16} color="#7C8797" style={{ flexShrink: 0 }} />
           </div>
-        </div>
-
-        <div style={styles.searchRow}>
-          <Search size={14} color="#7C8797" />
-          <input
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Procurar aluno…"
-            style={styles.searchInput}
-          />
-        </div>
-
-        <button style={styles.addBtn} onClick={() => setShowAdd(true)}>
-          <Plus size={15} /> Novo aluno
-        </button>
-
-        <div style={styles.studentList}>
-          {filtered.length === 0 && (
-            <div style={styles.emptyHint}>
-              {students.length === 0 ? "Ainda não há alunos registados." : "Sem resultados."}
-            </div>
-          )}
-          {filtered.map((s) => (
-            <div
-              key={s.id}
-              onClick={() => {
-                setSelectedId(s.id);
-                setTab("dados");
-              }}
-              style={{
-                ...styles.studentRow,
-                background: s.id === selectedId ? "#232A38" : "transparent",
-                borderLeft: s.id === selectedId ? "2px solid #4C7FBF" : "2px solid transparent",
-              }}
-            >
-              <PlateRing name={s.name || "?"} id={s.id} size={36} />
-              <div style={{ minWidth: 0 }}>
-                <div style={styles.studentName}>{s.name || "(sem nome)"}</div>
-                <div style={styles.studentMeta}>{s.goal || "sem objetivo definido"}</div>
+        ) : (
+          <>
+            <div style={styles.brand}>
+              <div style={styles.brandMark}>TL</div>
+              <div>
+                <div style={styles.brandTitle}>TITAN LEÇA</div>
+                <div style={styles.brandSub}>painel de coaches</div>
               </div>
-              <ChevronRight size={14} color="#5C6675" style={{ marginLeft: "auto", flexShrink: 0 }} />
+              {selected && (
+                <X
+                  size={16}
+                  color="#7C8797"
+                  style={{ marginLeft: "auto", cursor: "pointer", flexShrink: 0 }}
+                  onClick={() => setListOpen(false)}
+                />
+              )}
             </div>
-          ))}
-        </div>
+
+            <div style={styles.searchRow}>
+              <Search size={14} color="#7C8797" />
+              <input
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Procurar aluno…"
+                style={styles.searchInput}
+              />
+            </div>
+
+            <button style={styles.addBtn} onClick={() => setShowAdd(true)}>
+              <Plus size={15} /> Novo aluno
+            </button>
+
+            <div style={styles.studentList}>
+              {filtered.length === 0 && (
+                <div style={styles.emptyHint}>
+                  {students.length === 0 ? "Ainda não há alunos registados." : "Sem resultados."}
+                </div>
+              )}
+              {filtered.map((s) => (
+                <div
+                  key={s.id}
+                  onClick={() => selectStudent(s.id)}
+                  style={{
+                    ...styles.studentRow,
+                    background: s.id === selectedId ? "#232A38" : "transparent",
+                    borderLeft: s.id === selectedId ? "2px solid #4C7FBF" : "2px solid transparent",
+                  }}
+                >
+                  <PlateRing name={s.name || "?"} id={s.id} size={36} />
+                  <div style={{ minWidth: 0 }}>
+                    <div style={styles.studentName}>{s.name || "(sem nome)"}</div>
+                    <div style={styles.studentMeta}>{s.goal || "sem objetivo definido"}</div>
+                  </div>
+                  <ChevronRight size={14} color="#5C6675" style={{ marginLeft: "auto", flexShrink: 0 }} />
+                </div>
+              ))}
+            </div>
+          </>
+        )}
       </aside>
 
       <main style={styles.main} className="tl-main">
@@ -868,6 +897,10 @@ html, body { overflow-x: hidden; }
     border-right: none !important;
     border-bottom: 1px solid #232A38;
   }
+  .tl-sidebar-collapsed {
+    max-height: none !important;
+    flex-shrink: 0;
+  }
   .tl-main { min-height: 0; }
   .tl-field-grid { grid-template-columns: 1fr !important; }
   .tl-assess-grid { grid-template-columns: repeat(2, 1fr) !important; }
@@ -901,6 +934,15 @@ const styles = {
     flexShrink: 0,
   },
   brand: { display: "flex", alignItems: "center", gap: 10, padding: "18px 16px 14px" },
+  collapsedBar: {
+    display: "flex",
+    alignItems: "center",
+    gap: 10,
+    padding: "10px 16px",
+    cursor: "pointer",
+  },
+  collapsedName: { fontSize: 13, fontWeight: 600, color: "#E6E9EF", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" },
+  collapsedHint: { fontSize: 10.5, color: "#7C8797", fontFamily: "'IBM Plex Mono', monospace" },
   brandMark: {
     width: 34,
     height: 34,
